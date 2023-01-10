@@ -7,22 +7,31 @@
     <title>D3 Scatter plot</title>
     <style>
         svg {
-            width: 800px;
-            height: 600px;
+            margin: 0px;
+            overflow: hidden;
         }
         .tick text{
             font-size: 14px;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://unpkg.com/d3@6.7.0/dist/d3.min.js"></script>
 </head>
 <body>
     <script>
-        const {axisBottom, axisLeft, csv, select, selectAll, scaleOrdinal, scaleLinear, max} = d3
+        const { axisBottom,
+                axisLeft, 
+                csv, 
+                max,
+                select,
+                selectAll, 
+                scaleLinear, 
+                scaleOrdinal, 
+            } = d3
 
-        const width = 800
-        const height = 600
+        const width = window.innerWidth;
+        const height = window.innerHeight;
         const margin = {top:10, right:10, bottom: 20, left:40}
+        const radius = 5
 
         const parseRow = (d) => {
         d.sepal_length = +d.sepal_length;
@@ -39,7 +48,6 @@
         const main = async (url) =>  {
 
             const data = await csv(url, parseRow)
-            console.log(data)
 
             const xScale = scaleLinear().domain([0,max(data, xValues)])
                                         .range([margin.left,width - margin.right])
@@ -52,8 +60,8 @@
             const yAxis = axisLeft(yScale)
             
             const marks = data.map((d) => ({
-                x:xScale(d.petal_length),
-                y:yScale(d.sepal_width),
+                x:xScale(xValues(d)),
+                y:yScale(yValues(d)),
                 color:colorScale(d.species),
             }))
             
@@ -63,7 +71,7 @@
                                 .attr('cx', d => d.x)
                                 .attr('cy', d => d.y)
                                 .attr('fill', d => d.color)
-                                .attr('r', 5)
+                                .attr('r', radius)
 
             svg.append('g').call(xAxis)
                             .attr("transform", `translate(0,${height - margin.bottom})`)
@@ -82,6 +90,8 @@
 
         
         const svg = select('body').append('svg')
+                                .attr('width', width)
+                                .attr('height', height);
 
         main(csvUrl)
 
