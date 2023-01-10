@@ -20,7 +20,8 @@
     <script>
         const { axisBottom,
                 axisLeft, 
-                csv, 
+                csv,
+                extent, 
                 max,
                 select,
                 selectAll, 
@@ -51,7 +52,7 @@
 
             const xScale = scaleLinear().domain([0,max(data, xValues)])
                                         .range([margin.left,width - margin.right])
-            const yScale = scaleLinear().domain([0,max(data, yValues)])
+            const yScale = scaleLinear().domain(extent(data, yValues))
                                         .range([height - margin.bottom,margin.top])
             const colorScale = scaleOrdinal().domain(data, colorValues)
                                              .range(['#E6842A', '#137B80', '#8E6C8A'])
