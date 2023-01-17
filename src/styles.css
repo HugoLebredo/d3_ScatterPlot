@@ -1,0 +1,7 @@
+svg {
+    margin: 0px;
+    overflow: hidden;
+}
+.tick text{
+    font-size: 14px;
+}
